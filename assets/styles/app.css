@@ -1,0 +1,13 @@
+.login-form {
+    width: 400px;
+    margin: auto;
+    margin-top: 200px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 50px;
+}
+.valide {
+    background: orange;
+}
+.h3 {
+    color: orange !important;
+}

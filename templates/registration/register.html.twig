@@ -1,0 +1,36 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block navbar %}{% endblock %}
+{% block body %}
+    <div class="login-form">
+
+
+
+    <h1 class="h3 mb-3 font-weight-normal " >Register</h1>
+
+    {{ form_start(registrationForm) }}
+        {{ form_label(registrationForm.email) }}
+       {{ form_widget(registrationForm.email,{'attr':
+           {
+               'class':'form-control',
+               'autocomplete':"email",
+               'required':'true',
+               'autofocus':'true'
+           }
+       }) }}
+        <label for="inputPassword">Password</label>
+        {{ form_widget(registrationForm.plainPassword,{'attr':
+            {
+                'class':'form-control',
+                'autocomplete':"current-password",
+                'required':'true',
+            }
+        }) }}
+        {{ form_row(registrationForm.agreeTerms) }}
+
+        <button type="submit" class="btn">Register</button>
+    {{ form_end(registrationForm) }}
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}
