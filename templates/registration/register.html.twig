@@ -1,33 +1,42 @@
 {% extends 'layout/base.html.twig' %}
-
 {% block title %}Register{% endblock %}
 {% block navbar %}{% endblock %}
 {% block body %}
-    <div class="login-form">
-
-
-
-    <h1 class="h3 mb-3 font-weight-normal " >Register</h1>
-
+<div class="login-form">
     {{ form_start(registrationForm) }}
-        {{ form_label(registrationForm.email) }}
-       {{ form_widget(registrationForm.email,{'attr':
-           {
-               'class':'form-control',
-               'autocomplete':"email",
-               'required':'true',
-               'autofocus':'true'
-           }
-       }) }}
-        <label for="inputPassword">Password</label>
-        {{ form_widget(registrationForm.plainPassword,{'attr':
-            {
-                'class':'form-control',
-                'autocomplete':"current-password",
-                'required':'true',
-            }
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+
+    <h1 class="h3 mb-3 font-weight-normal ">Register</h1>
+
+    {{ form_label(registrationForm.firstName) }}
+    {{ form_widget(registrationForm.firstName,{'attr':{
+        "name":"firstName",
+        "id":"inputFirstname",
+        "class":"form-control",
+        "required":"true",
+        "autofocus":"true"
+    }}) }}
+    {{ form_label(registrationForm.lastName) }}
+    {{ form_widget(registrationForm.lastName,{'attr':{
+        "name":"lastName",
+        "id":"inputLastname",
+        "class":"form-control",
+        "required":"true",
+    }})  }}
+    {{ form_label(registrationForm.email) }}
+    {{ form_widget(registrationForm.email,{'attr':{
+        "name":"firstName",
+        "id":"inputEmail",
+        "class":"form-control",
+        "required":"true",
+
+    }})  }}
+    {{ form_label(registrationForm.plainPassword) }}
+    {{ form_widget(registrationForm.plainPassword,{'attr':{
+        "name":"Password",
+        "id":"inputPassword",
+        "class":"form-control",
+        "required":"true",
+    }}) }}
 
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
