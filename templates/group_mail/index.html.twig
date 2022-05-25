@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<title>GroupMail index</title>
+
+{% block body %}
+    <h1>GroupMail index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for group_mail in group_mails %}
+            <tr>
+                <td>{{ group_mail.id }}</td>
+                <td>{{ group_mail.name }}</td>
+                <td>
+                    <a href="{{ path('app_group_mail_show', {'id': group_mail.id}) }}">show</a>
+                    <a href="{{ path('app_group_mail_edit', {'id': group_mail.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_group_mail_new') }}">Create new</a>
+{% endblock %}

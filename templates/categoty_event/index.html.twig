@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<title>CategotyEvent index</title>
+
+{% block body %}
+    <h1>CategotyEvent index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for categoty_event in categoty_events %}
+            <tr>
+                <td>{{ categoty_event.id }}</td>
+                <td>{{ categoty_event.nom }}</td>
+                <td>{{ categoty_event.description }}</td>
+                <td>
+                    <a href="{{ path('app_categoty_event_show', {'id': categoty_event.id}) }}">show</a>
+                    <a href="{{ path('app_categoty_event_edit', {'id': categoty_event.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_categoty_event_new') }}">Create new</a>
+{% endblock %}

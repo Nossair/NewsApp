@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<title>OptionDateEvent index</title>
+
+{% block body %}
+    <h1>OptionDateEvent index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>OptionDate</th>
+                <th>NbrVote</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for option_date_event in option_date_events %}
+            <tr>
+                <td>{{ option_date_event.id }}</td>
+                <td>{{ option_date_event.optionDate ? option_date_event.optionDate|date('Y-m-d') : '' }}</td>
+                <td>{{ option_date_event.nbrVote }}</td>
+                <td>
+                    <a href="{{ path('app_option_date_event_show', {'id': option_date_event.id}) }}">show</a>
+                    <a href="{{ path('app_option_date_event_edit', {'id': option_date_event.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_option_date_event_new') }}">Create new</a>
+{% endblock %}

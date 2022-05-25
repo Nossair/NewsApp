@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<title>CategotyEvent</title>
+
+{% block body %}
+    <h1>CategotyEvent</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ categoty_event.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ categoty_event.nom }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ categoty_event.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_categoty_event_index') }}">back to list</a>
+
+    <a href="{{ path('app_categoty_event_edit', {'id': categoty_event.id}) }}">edit</a>
+
+    {{ include('categoty_event/_delete_form.html.twig') }}
+{% endblock %}

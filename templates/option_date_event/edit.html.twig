@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+
+<title>Edit OptionDateEvent</title>
+
+{% block body %}
+    <h1>Edit OptionDateEvent</h1>
+
+    {{ include('option_date_event/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_option_date_event_index') }}">back to list</a>
+
+    {{ include('option_date_event/_delete_form.html.twig') }}
+{% endblock %}

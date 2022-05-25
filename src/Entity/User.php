@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -33,6 +35,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     private $lastName;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Event::class)]
+    private $events;
+
+    #[ORM\ManyToMany(targetEntity: OptionDateEvent::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: "Vote")]
+    private $optionDateEvents;
+
+
+
+
+    public function __construct()
+    {
+        $this->event = new ArrayCollection();
+        $this->chose_date_event = new ArrayCollection();
+        $this->choiceDateEvent = new ArrayCollection();
+        $this->groupMails = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->optionDateEvents = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -127,4 +149,59 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getUser() === $this) {
+                $event->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, OptionDateEvent>
+     */
+    public function getOptionDateEvents(): Collection
+    {
+        return $this->optionDateEvents;
+    }
+
+    public function addOptionDateEvent(OptionDateEvent $optionDateEvent): self
+    {
+        if (!$this->optionDateEvents->contains($optionDateEvent)) {
+            $this->optionDateEvents[] = $optionDateEvent;
+        }
+
+        return $this;
+    }
+
+    public function removeOptionDateEvent(OptionDateEvent $optionDateEvent): self
+    {
+        $this->optionDateEvents->removeElement($optionDateEvent);
+
+        return $this;
+    }
+
 }

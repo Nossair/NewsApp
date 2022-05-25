@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<title>OptionDateEvent</title>
+
+{% block body %}
+    <h1>OptionDateEvent</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ option_date_event.id }}</td>
+            </tr>
+            <tr>
+                <th>OptionDate</th>
+                <td>{{ option_date_event.optionDate ? option_date_event.optionDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NbrVote</th>
+                <td>{{ option_date_event.nbrVote }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_option_date_event_index') }}">back to list</a>
+
+    <a href="{{ path('app_option_date_event_edit', {'id': option_date_event.id}) }}">edit</a>
+
+    {{ include('option_date_event/_delete_form.html.twig') }}
+{% endblock %}

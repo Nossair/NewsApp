@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>New CategotyEvent</title>
+
+{% block body %}
+    <h1>Create new CategotyEvent</h1>
+
+    {{ include('categoty_event/_form.html.twig') }}
+
+    <a href="{{ path('app_categoty_event_index') }}">back to list</a>
+{% endblock %}
