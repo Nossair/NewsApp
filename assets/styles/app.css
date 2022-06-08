@@ -9,5 +9,32 @@
     background: orange;
 }
 .h3 {
-    color: orange !important;
+    color: #f16e00 !important;
+}
+nav {
+    background-color: #000 !important;
+}
+
+.s-logo{
+    margin-left: 20px;
+    color: white !important;
+}
+.container-fluid {
+    display: contents !important;
+}
+.nav-link{
+    color: #FFFFFF !important;
+}
+.active {
+    color : #ff7900 !important;
+}
+a:hover{
+    color : #ff7900 !important;
+}
+.nav-item {
+    font-size: 1rem;
+}
+.content-form {
+
+    margin: 100px;
 }

@@ -20,6 +20,10 @@ class GroupMail
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'groupMails')]
+    #[ORM\JoinTable(name: "groupMailByUser")]
+    private $users;
+
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'groupMails')]
     #[ORM\JoinTable(name: "groupMailByEvent")]
     private $events;
@@ -73,6 +77,25 @@ class GroupMail
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param mixed $users
+     */
+    public function addUsers(User $user): void
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+        }
+
     }
 
     /**

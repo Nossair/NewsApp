@@ -13,9 +13,7 @@ class GroupMailType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('events')
-            ->add('addressMails')
-        ;
+            ->add('addressMails');
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,4 +1,63 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="container">
+    <form id="formEvent" method="post" >
+    <div class="row">
+        <div class="col-4">
+            <label for="inputCategoryEvent" class="required"> Name event :</label>
+            <input type="text" class="form-control" id="inputName" name="inputName" required autofocus>
+        </div>
+        <div class="col-4">
+            <label for="inputCategoryEvent" class="required"> Category event :</label>
+            <select class="form-select" id="inputCategoryEvent" name="inputCategoryEvent" >
+                <option selected>Open this select menu</option>
+                {% for categoryEvent in categoryEvents %}
+                    <option value={{ categoryEvent.id }}>{{ categoryEvent.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4">
+            <label for="endvote" class="required"> Fin vote :</label>
+            <input type= "text" id="datepickerend" class="form-control" id="endvote" name="endvote">
+        </div>
+        <div class="col-4">
+            <label for="event_date" class="form-label">Date évènement</label>
+            <div class="row">
+                <div class="col">
+                    <input type= "text" id="datepicker" class="form-control" >
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-icon btn-secondary " id="buttontest">
+                        <i class="fa fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <br>
+            <select class="form-select" id="event_optionDateEvent" name="event_optionDateEvent" multiple>
+
+            </select>
+        </div>
+
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4">
+            <label for="inputgroupMails" class="required"> Group mails :</label>
+            <select class="form-select" multiple id="inputgroupMails" name="inputgroupMails">
+                {% for groupmail in groupmails %}
+                    <option value={{ groupmail.id }}>{{ groupmail.name }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+        <div class="col-4">
+            <label for="inputDescription" class="required"> Description :</label>
+            <textarea   class="form-control" multiple id="inputDescription" name="inputDescription"></textarea>
+        </div>
+    </div>
+
+    </form>
+    <button class="btn btn-primary " id="addEvent">save</button>
+</div>
+</div>

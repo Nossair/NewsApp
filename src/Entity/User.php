@@ -43,6 +43,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinTable(name: "Vote")]
     private $optionDateEvents;
 
+    #[ORM\ManyToMany(targetEntity: GroupMail::class, inversedBy: 'users')]
+    #[ORM\JoinTable(name: "groupMailByUser")]
+    private $groupMails;
+
 
 
 

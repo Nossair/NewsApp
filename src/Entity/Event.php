@@ -152,9 +152,9 @@ class Event
 
     public function addGroupMail(GroupMail $groupMail): self
     {
-        if (!$this->groupMails->contains($groupMail)) {
+
             $this->groupMails[] = $groupMail;
-        }
+
 
         return $this;
     }
