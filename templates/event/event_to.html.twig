@@ -1,0 +1,43 @@
+{% extends 'layout/base.html.twig' %}
+
+{% block title %}List Events{% endblock %}
+
+{% block body %}
+    <div class="content-form">
+        <h1>Vos événement </h1>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Nombre des votes</th>
+                <th>Date fin du vote</th>
+                <th>actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>{{ event.id }}</td>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.description }}</td>
+                    <td>{{ event.nbrVote }}</td>
+                    <td>{{ event.dateEndVote ? event.dateEndVote|date('Y-m-d') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+                        <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+    </div>
+{% endblock %}

@@ -12,6 +12,7 @@ use App\Repository\CategotyEventRepository;
 use App\Repository\EventRepository;
 use App\Repository\GroupMailRepository;
 use App\Repository\OptionDateEventRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -46,12 +47,6 @@ class EventController extends AbstractController
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EventRepository $eventRepository,OptionDateEventRepository $optionDateEventRepository, GroupMailRepository $groupMailRepository, CategotyEventRepository $categotyEventRepository): Response
     {
-
-
-
-
-
-
         if ($request->isXmlHttpRequest()) {
             $optionsDateEvent =json_decode($request->request->get("optionDateEvent"), true) ;
             $groupMails = json_decode($request->request->get("groupMails"), true) ;
@@ -88,37 +83,92 @@ class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
-    public function show( $event): Response
+    #[Route('/eventTo', name: 'app_event_to', methods: ['GET'])]
+    public function eventTo(Request $request, EventRepository $eventRepository,OptionDateEventRepository $optionDateEventRepository, GroupMailRepository $groupMailRepository, CategotyEventRepository $categotyEventRepository): Response
     {
+        $IdsGroupmail = '(';
+         $groupMails=$groupMailRepository->findByUser($this->security->getUser());
+         foreach ($groupMails as $item){
+             $IdsGroupmail  .= $item->getId().',';
+         }
+        $IdsGroupmail = trim($IdsGroupmail,',');
+        $IdsGroupmail .=')';
+        $eventInvited = $eventRepository->findByGroupMail($IdsGroupmail);
+        return $this->render('event/event_to.html.twig', [
+            'events' => $eventInvited,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
+    public function show(EventRepository $eventRepository,Request $request ): Response
+    {
+        $event = $eventRepository->find($request->get('id'));
         return $this->render('event/show.html.twig', [
             'event' => $event,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Event $event, EventRepository $eventRepository): Response
+    public function edit(ManagerRegistry $doctrine,Request $request, EventRepository $eventRepository,OptionDateEventRepository $optionDateEventRepository, GroupMailRepository $groupMailRepository, CategotyEventRepository $categotyEventRepository): Response
     {
-        $form = $this->createForm(EventType::class, $event);
-        $form->handleRequest($request);
+        $entityManager = $doctrine->getManager();
+        $event = $entityManager->getRepository(Event::class)->find($request->get('id'));
+        if ($request->isXmlHttpRequest()) {
+            $entityManager = $doctrine->getManager();
+            $optionsDateEvent = json_decode($request->request->get("optionDateEvent"), true);
+            $groupMails = json_decode($request->request->get("groupMails"), true);
+            $event->setCategoryEvent($categotyEventRepository->find($request->request->get("categoryEvent")));
+            $event->setName($request->request->get("name"));
+            $event->setDescription($request->request->get("description"));
+            $event->setDateEndVote(new \DateTime($request->request->get("dateEndVote")));
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $eventRepository->add($event, true);
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            foreach ($groupMails as $item) {
+                if( !in_array($groupMailRepository->find($item),$event->getGroupMails()->getValues()))
+                $event->addGroupMail($groupMailRepository->find($item));
+            }
+
+            foreach ($event->getGroupMails()->getValues()as $item) {
+                if( !in_array($item->getId(),$groupMails ))
+                    $event->removeGroupMail($item);
+            }
+            $entityManager->flush();
+            foreach ($optionsDateEvent as $item) {
+                if(!in_array($optionDateEventRepository->findOneBy(['optionDate'=>new \DateTime($item)]),$event->getOptionDateEvent()->getValues())){
+                    $optionDateEvent = new OptionDateEvent();
+                    $optionDateEvent->setNbrVote(0);
+                    $optionDateEvent->setOptionDate(new \DateTime($item));
+                    $optionDateEvent->setEvent($eventRepository->find($event));
+                    $event->addOptionDateEvent($optionDateEvent);
+                    $optionDateEventRepository->add($optionDateEvent, true);
+                }
+
+            }
+            foreach ($event->getOptionDateEvent()->getValues() as $item) {
+                if(!in_array(date_format($item->getOptionDate(),"m/d/Y"),$optionsDateEvent)){
+                    $event->removeOptionDateEvent($item);
+                    $optionDateEventRepository->remove($item, true);
+                }
+
+
+            }
+            return $this->json(['event' => $eventRepository->find($event)->getId()]);
         }
 
         return $this->renderForm('event/edit.html.twig', [
-            'event' => $event,
-            'form' => $form,
+            'event' =>$event,
+
+            'groupmails' => $this->groupMailRepository->findAll(),
+            'categoryEvents' => $this->categotyEventRepository->findAll(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
-    public function delete(Request $request, Event $event, EventRepository $eventRepository): Response
+    public function delete(Request $request, EventRepository $eventRepository, OptionDateEventRepository $optionDateEventRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->request->get('_token'))) {
-            $eventRepository->remove($event, true);
+        if ($this->isCsrfTokenValid('delete'.$request->get('id'), $request->request->get('_token'))) {
+            $optionDateEventRepository->removeByEvent($request->get('id'));
+            $eventRepository->remove($eventRepository->find($request->get('id')), true);
         }
 
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);

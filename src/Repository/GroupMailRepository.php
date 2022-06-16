@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\GroupMail;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -39,20 +40,33 @@ class GroupMailRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return GroupMail[] Returns an array of GroupMail objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('g')
-//            ->andWhere('g.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('g.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return GroupMail[] Returns an array of GroupMail objects
+     */
+    public function findByUser($user): array
+    {
+        $query = $this->createQueryBuilder('g');
+        $query->join("g.users",'u')
+            ->where('u.id ='.$user->getId())
+            ;
+
+        return $query->getQuery()->getResult();
+
+    }
+
+    /**
+     * @return GroupMail[] Returns an array of GroupMail objects
+     */
+    public function findByEvent($event): array
+    {
+        $query = $this->createQueryBuilder('g');
+        $query->join("g.events",'e')
+            ->where('e.id ='.$event->getId())
+        ;
+
+        return $query->getQuery()->getResult();
+
+    }
 
 //    public function findOneBySomeField($value): ?GroupMail
 //    {

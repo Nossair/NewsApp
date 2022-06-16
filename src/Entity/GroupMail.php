@@ -20,19 +20,23 @@ class GroupMail
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'groupMails')]
-    #[ORM\JoinTable(name: "groupMailByUser")]
-    private $users;
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'groupMails')]
     #[ORM\JoinTable(name: "groupMailByEvent")]
     private $events;
 
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'groupMails')]
+    #[ORM\JoinTable(name: "GroupMailsByUser")]
+
+    private $users;
+
+
 
     public function __construct()
     {
         $this->events = new ArrayCollection();
-        $this->addressMails = new ArrayCollection();
+
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,34 +98,30 @@ class GroupMail
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
+            $user->addGroupMail($this);
         }
 
     }
 
-    /**
-     * @return Collection<int, AddressMail>
-     */
-    public function getAddressMails(): Collection
+    public function removeUser(User $user): self
     {
-        return $this->addressMails;
-    }
-
-    public function addAddressMail(AddressMail $addressMail): self
-    {
-        if (!$this->addressMails->contains($addressMail)) {
-            $this->addressMails[] = $addressMail;
-            $addressMail->addGroupMail($this);
+        if ($this->users->removeElement($user)) {
+            $user->removeGroupMail($this);
         }
 
         return $this;
     }
 
-    public function removeAddressMail(AddressMail $addressMail): self
+    public function addUser(User $user): self
     {
-        if ($this->addressMails->removeElement($addressMail)) {
-            $addressMail->removeGroupMail($this);
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addGroupMail($this);
         }
 
         return $this;
     }
+
+
+
 }

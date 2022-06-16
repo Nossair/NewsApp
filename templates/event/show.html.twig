@@ -1,16 +1,14 @@
-<!DOCTYPE html>
+{% extends 'layout/base.html.twig' %}
 
-<title>Event</title>
+{% block title %}Event{% endblock %}
 
 {% block body %}
+<div class="content-form">
     <h1>Event</h1>
-
-    <table class="table">
+<div class="row">
+    <table class="table col">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ event.id }}</td>
-            </tr>
+
             <tr>
                 <th>Name</th>
                 <td>{{ event.name }}</td>
@@ -20,12 +18,8 @@
                 <td>{{ event.description }}</td>
             </tr>
             <tr>
-                <th>Nbr_vote</th>
+                <th>Nombre Votes</th>
                 <td>{{ event.nbrVote }}</td>
-            </tr>
-            <tr>
-                <th>Is_archived</th>
-                <td>{{ event.isArchived ? 'Yes' : 'No' }}</td>
             </tr>
             <tr>
                 <th>Date_end_vote</th>
@@ -34,9 +28,41 @@
         </tbody>
     </table>
 
+    {% set foo = 0 %}
+{% for item in  event.getGroupMails().getValues%}
+    {% set foo = foo+item.getUsers().getValues()|length %}
+{% endfor %}
+
+    <div class=" col">
+            <div class="panel-heading ">
+                <b class="panel-title">
+                    Date Possible de l'event</b>
+            </div>
+        <br>
+        {% for item in event.getOptionDateEvent().getValues() %}
+        <div class="progress">
+            <input type="checkbox" value="">
+
+                            <div class="progress-bar progress-bar-striped " role="progressbar" style="width: {{ (item.nbrVote*100)/foo }}%" >
+
+                                {{ item.nbrVote }}
+                            </div>
+            <div class="col" style="padding-top: 10px">{{ item.getOptionDate()|date('j F  Y') }}</div>
+
+        </div>
+        <br>
+        {% endfor %}
+        <div class="panel-footer text-center">
+                <button type="button" class="btn btn-success btn-block btn-sm">
+                    Vote</button>
+            </div>
+    </div>
+
+</div>
     <a href="{{ path('app_event_index') }}">back to list</a>
 
     <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
 
     {{ include('event/_delete_form.html.twig') }}
+</div>
 {% endblock %}

@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $optionDateEvents;
 
     #[ORM\ManyToMany(targetEntity: GroupMail::class, inversedBy: 'users')]
-    #[ORM\JoinTable(name: "groupMailByUser")]
+    #[ORM\JoinTable(name: "GroupMailsByUser")]
     private $groupMails;
 
 
@@ -207,5 +207,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, GroupMail>
+     */
+    public function getGroupMails(): Collection
+    {
+        return $this->groupMails;
+    }
+
+    public function addGroupMail(GroupMail $groupMail): self
+    {
+        if (!$this->groupMails->contains($groupMail)) {
+            $this->groupMails[] = $groupMail;
+        }
+
+        return $this;
+    }
+
+    public function removeGroupMail(GroupMail $groupMail): self
+    {
+        $this->groupMails->removeElement($groupMail);
+
+        return $this;
+    }
+
+
 
 }

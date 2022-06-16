@@ -1,4 +1,27 @@
+<div class="container">
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="row">
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name,{
+            'attr':{
+                'class': 'form-control',
+            }
+        }) }}
+    </div>
+    <br>
+    <div class="row">
+
+        {{ form_label(form.users) }}
+        {{ form_widget(form.users,{
+            'attr':{
+            'class': 'form-select',
+            'multiple':'true',
+
+        }
+        }) }}
+    </div>
+
 {{ form_end(form) }}
+    <br>
+    <button id='addGroupMail' class="btn btn-primary" >{{ button_label|default('Save') }}</button>
+</div>

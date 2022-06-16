@@ -12,13 +12,13 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/event/">Events</a>
+                    <a class="nav-link {% if '/event/' in path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')) and path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params')) != '/event/eventTo'   %}active{% endif %}" aria-current="page" href="/event/">Your Events</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Categorie Events</a>
+                    <a class="nav-link {% if '/event/eventTo' == path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params'))  %}active{% endif %}" href="/event/eventTo/">Event to vote</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Ajouter Groupe Emails</a>
+                    <a class="nav-link {% if '/group/mail' in path(app.request.attributes.get('_route'),app.request.attributes.get('_route_params'))  %}active{% endif %}" href="/group/mail/"> Groupe Emails</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Historique</a>

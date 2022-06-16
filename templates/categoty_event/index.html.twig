@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+{% extends 'layout/base.html.twig' %}
 
-<title>CategotyEvent index</title>
+{% block title %}CategotyEvent index{% endblock %}
 
 {% block body %}
-    <h1>CategotyEvent index</h1>
+<div class="content-form">
+    <h1>Categoty Event</h1>
 
     <table class="table">
         <thead>
@@ -34,4 +35,5 @@
     </table>
 
     <a href="{{ path('app_categoty_event_new') }}">Create new</a>
+</div>
 {% endblock %}

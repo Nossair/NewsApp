@@ -3,9 +3,11 @@
 
 
 {% block body %}
+<div class="content-form">
     <h1>Create new GroupMail</h1>
 
     {{ include('group_mail/_form.html.twig') }}
 
     <a href="{{ path('app_group_mail_index') }}">back to list</a>
+</div>
 {% endblock %}

@@ -39,20 +39,23 @@ class EventRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Event[] Returns an array of Event objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Event[] Returns an array of Event objects
+     */
+    public function findByGroupMail($groupmail): array
+    {
+        $result =[];
+
+        $result = $this->createQueryBuilder('e')
+                ->join('e.groupMails','g')
+                ->where('g.id IN '.$groupmail)
+                ->getQuery()
+                ->getResult()
+            ;
+
+
+        return $result;
+    }
 
 //    public function findOneBySomeField($value): ?Event
 //    {

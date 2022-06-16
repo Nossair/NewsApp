@@ -3,23 +3,29 @@
     <div class="row">
         <div class="col-4">
             <label for="inputCategoryEvent" class="required"> Name event :</label>
-            <input type="text" class="form-control" id="inputName" name="inputName" required autofocus>
+            <input type="text" class="form-control" id="inputName" value="{% if event is defined  %} {{ event.name }}{% endif %}" name="inputName" required autofocus>
         </div>
         <div class="col-4">
             <label for="inputCategoryEvent" class="required"> Category event :</label>
+
             <select class="form-select" id="inputCategoryEvent" name="inputCategoryEvent" >
                 <option selected>Open this select menu</option>
                 {% for categoryEvent in categoryEvents %}
-                    <option value={{ categoryEvent.id }}>{{ categoryEvent.nom }}</option>
+                    {% if event is defined  %}
+                    <option value={{ categoryEvent.id }} {% if event.categoryEvent.id == categoryEvent.id %}  selected {% endif %}>{{ categoryEvent.nom }}</option>
+                    {% else %}
+                     <option value={{ categoryEvent.id }}>{{ categoryEvent.nom }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
+            <a href="/categoty/events/new"> <i class="fa fa-plus"></i>Ajouter category</a>
         </div>
     </div>
     <br>
     <div class="row">
         <div class="col-4">
             <label for="endvote" class="required"> Fin vote :</label>
-            <input type= "text" id="datepickerend" class="form-control" id="endvote" name="endvote">
+            <input type= "text" id="datepickerend" class="form-control" value="{% if event is defined  %} {{ event.getDateEndVote()|date("m/d/Y") }}{% endif %}" id="endvote" name="endvote">
         </div>
         <div class="col-4">
             <label for="event_date" class="form-label">Date évènement</label>
@@ -35,7 +41,11 @@
             </div>
             <br>
             <select class="form-select" id="event_optionDateEvent" name="event_optionDateEvent" multiple>
-
+                {% if event is defined  %}
+                    {% for item in event.getOptionDateEvent().getValues() %}
+                    <option selected>{{item.optionDate|date("m/d/Y") }}</option>
+                    {% endfor %}
+                {% endif %}
             </select>
         </div>
 
@@ -43,21 +53,37 @@
     <br>
     <div class="row">
         <div class="col-4">
+
             <label for="inputgroupMails" class="required"> Group mails :</label>
             <select class="form-select" multiple id="inputgroupMails" name="inputgroupMails">
                 {% for groupmail in groupmails %}
-                    <option value={{ groupmail.id }}>{{ groupmail.name }}</option>
+                    {% if event is defined  %}
+                    <option value={{ groupmail.id }} {% for item in  event.getGroupMails().getValues() %}{% if groupmail.id == item.id %} selected {% endif %}{% endfor%} >{{ groupmail.name }}</option>
+                    {% else %}
+                     <option value={{ groupmail.id }}>{{ groupmail.name }}</option>
+                     {% endif %}
                 {% endfor %}
             </select>
+            <a href="/group/mail/new"> <i class="fa fa-plus"></i>Ajouter Groupe mail</a>
 
         </div>
         <div class="col-4">
             <label for="inputDescription" class="required"> Description :</label>
-            <textarea   class="form-control" multiple id="inputDescription" name="inputDescription"></textarea>
+            <textarea   class="form-control" multiple id="inputDescription" name="inputDescription">{% if event is defined  %}{{ event.description }}{% endif %}</textarea>
         </div>
     </div>
 
     </form>
-    <button class="btn btn-primary " id="addEvent">save</button>
+    <br>
+    <div class="row">
+        <div class="col">
+    <button class="btn btn-primary " id={% if event is defined %}"updateEvent">Modifier{% else %}"addEvent" >Ajouter{% endif %}</button>
+        </div>
+        <div class="col">
+    {% if event is defined %}
+    {{ include('event/_delete_form.html.twig') }}
+    {% endif %}
+        </div>
+    </div>
 </div>
 </div>

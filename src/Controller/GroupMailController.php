@@ -4,15 +4,25 @@ namespace App\Controller;
 
 use App\Entity\GroupMail;
 use App\Form\GroupMailType;
+use App\Repository\CategotyEventRepository;
 use App\Repository\GroupMailRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 
 #[Route('/group/mail')]
 class GroupMailController extends AbstractController
 {
+    private UserRepository $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
     #[Route('/', name: 'app_group_mail_index', methods: ['GET'])]
     public function index(GroupMailRepository $groupMailRepository): Response
     {
@@ -22,19 +32,28 @@ class GroupMailController extends AbstractController
     }
 
     #[Route('/new', name: 'app_group_mail_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, GroupMailRepository $groupMailRepository): Response
+    public function new(Request $request, GroupMailRepository $groupMailRepository, UserRepository $userRepository): Response
     {
         $groupMail = new GroupMail();
-        $form = $this->createForm(GroupMailType::class, $groupMail);
+        $form = $this->createForm(GroupMailType::class, $groupMail)
+        ->add('users',ChoiceType::class,[
+            'choices' => $this->getUsersOption()
+        ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->isXmlHttpRequest())  {
+            $users =json_decode($request->request->get("users"), true) ;
+            $groupMail->setName($request->request->get("name"));
+            foreach ($users as $item){
+                $groupMail->addUser($userRepository->find($item));
+            }
             $groupMailRepository->add($groupMail, true);
 
-            return $this->redirectToRoute('app_group_mail_index', [], Response::HTTP_SEE_OTHER);
+            return $this->json(['groupMail' => $groupMailRepository->find($groupMail)->getId()]);
         }
 
         return $this->renderForm('group_mail/new.html.twig', [
+            'user_option' => $this->getUsersOption(),
             'group_mail' => $groupMail,
             'form' => $form,
         ]);
@@ -74,5 +93,13 @@ class GroupMailController extends AbstractController
         }
 
         return $this->redirectToRoute('app_group_mail_index', [], Response::HTTP_SEE_OTHER);
+    }
+    public function getUsersOption(){
+        $users = $this->userRepository->findAll();
+        $userOptions = [];
+        foreach ($users as $index){
+            $userOptions[$index->getEmail()] = $index->getId();
+        }
+        return $userOptions;
     }
 }

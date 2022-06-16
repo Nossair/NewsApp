@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/categoty/event')]
+#[Route('/categoty/events')]
 class CategotyEventController extends AbstractController
 {
     #[Route('/', name: 'app_categoty_event_index', methods: ['GET'])]

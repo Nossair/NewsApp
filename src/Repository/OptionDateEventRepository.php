@@ -39,6 +39,22 @@ class OptionDateEventRepository extends ServiceEntityRepository
         }
     }
 
+    public function removeByEvent($event_id, bool $flush = false): void
+    {
+        $optionDateToDelete = $this->createQueryBuilder('o')
+            ->where('o.event = '.$event_id)
+            ->getQuery()
+            ->getResult();
+        foreach ($optionDateToDelete as $item){
+            $this->getEntityManager()->remove($item);
+        }
+
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
 //    /**
 //     * @return OptionDateEvent[] Returns an array of OptionDateEvent objects
 //     */
